@@ -19,18 +19,18 @@ void Menueground::draw(sf::RenderWindow* window)
 	background.setFillColor(sf::Color(255, 255, 255, 128));
 	window->draw(background);
 
-	sf::Font font;
+	/*sf::Font font;
 	if (!font.loadFromFile("Fonts/arial.ttf"))
 	{
 		std::cout << "Ia fontul de unde nu-i";
 	}
 	sf::Text text;
-	text.setString("Game on");
+	text.setString("");
 	text.setFillColor(sf::Color::Green);
 	text.setFont(font);
 	text.setCharacterSize(50);
 	text.setPosition(50, 100);
 
-	window->draw(text);
+	window->draw(text);*/
 
 }

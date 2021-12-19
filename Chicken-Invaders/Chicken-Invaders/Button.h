@@ -17,7 +17,7 @@ protected:
     sf::Color color;
 
 public:
-    Button(const sf::Vector2f& pos, const float& wd, const float& ht, const sf::Color& clr = sf::Color::Cyan);
+    Button(const sf::Vector2f& pos, const float& wd, const float& ht, const sf::Color& clr = sf::Color::Red);
     void setFontSize(const float& fs);
     void setLabel(const std::string& lb);
     void setColor(const sf::Color& clr);

@@ -32,10 +32,10 @@ bool Button::isHoverd(sf::Vector2i mousePos)
 {
 	if (mousePos.x >= pos.x && mousePos.x < pos.x + width && mousePos.y >= pos.y && mousePos.y < pos.y + height) {
 
-		setColor(sf::Color::Blue);
+		setColor(sf::Color(130,121,133,200));
 	}
 	else
-		setColor(sf::Color::Cyan);
+		setColor(sf::Color(218,203,223,200));
 	return false;
 }
 

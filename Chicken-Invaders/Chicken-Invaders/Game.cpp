@@ -7,19 +7,35 @@
 void Game::initWindow()
 {
 	this->window = new  sf::RenderWindow(sf::VideoMode(1920,1080), "Chicken Invaders", sf::Style::Fullscreen);
+	this->window->setFramerateLimit(144);
+	this->window->setVerticalSyncEnabled(false);
 	window->setActive();
 }
 
+void Game::initCharacter()
+{
+	this->character = new Character();
+}
 
-//comnstructir &destructor
+void Game::initTitle()
+{
+	this->title = new Title();
+}
+
+
+//constructor & destructor
 Game::Game()
 {
 	this->initWindow(); 
+	this->initCharacter();
+	this->initTitle();
 }
 
 Game::~Game()
 {
 	delete this->window;
+	delete this->character;
+	delete this->title;
 }
 
 //functions
@@ -72,6 +88,30 @@ void Game::update()
 			}
 		}
 	}
+	if (windowstate == 1)
+	{
+	/*auto mousePos = sf::Mouse::getPosition(*window);
+	move character
+	if (lastMousePos == mousePos)
+	{*/
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+		this->character->move(-1.f, 0.f);
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+		this->character->move(0.f, -1.f);
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+		this->character->move(0.f, 1.f);
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+		this->character->move(1.f, 0.f);
+
+		}
+	/*else
+	{
+		this->character->moveByMouse(mousePos);
+	}
+	lastMousePos = mousePos;
+	}*/
+
 }
 
 void Game::render()
@@ -82,6 +122,7 @@ void Game::render()
 	if (!windowstate)
 	{
 		MG->draw(window);
+		this->title->render(*this->window);
 		butStart->draw(window);
 		sf::Font font;
 		if (!font.loadFromFile("Fonts/arial.ttf"))
@@ -90,7 +131,7 @@ void Game::render()
 		}
 		sf::Text text;
 		text.setString("Play");
-		text.setFillColor(sf::Color::Green);
+		text.setFillColor(sf::Color(78,72,79));
 		text.setFont(font);
 		text.setPosition(350, 350);
 		window->draw(text);
@@ -103,7 +144,7 @@ void Game::render()
 		}
 		sf::Text text1;
 		text1.setString("Rules");
-		text1.setFillColor(sf::Color::Green);
+		text1.setFillColor(sf::Color(78, 72, 79));
 		text1.setFont(font1);
 		text1.setPosition(350, 450);
 		window->draw(text1);
@@ -116,14 +157,18 @@ void Game::render()
 		}
 		sf::Text text2;
 		text2.setString("Exit");
-		text2.setFillColor(sf::Color::Green);
+		text2.setFillColor(sf::Color(78, 72, 79));
 		text2.setFont(font2);
 		text2.setPosition(350, 550);
 		window->draw(text2);
 	}
 	else
 	{
-		if(windowstate==1) PG->draw(window);
+		if (windowstate == 1) 
+		{
+			PG->draw(window);
+			this->character->render(*this->window);
+		}
 		else 
 		{
 			if (windowstate == 2)
@@ -137,7 +182,7 @@ void Game::render()
 				}
 				sf::Text text3;
 				text3.setString("Back");
-				text3.setFillColor(sf::Color::Green);
+				text3.setFillColor(sf::Color(78, 72, 79));
 				text3.setFont(font3);
 				text3.setPosition(890, 625);
 				window->draw(text3);

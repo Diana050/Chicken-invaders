@@ -9,6 +9,8 @@
 #include "Playground.h"
 #include "Rulesground.h"
 #include "Menueground.h"
+#include "Character.h"
+#include "Title.h"
 
 class Game
 {
@@ -23,9 +25,15 @@ private:
 	Playground* PG = new Playground;
 	Rulesground* RG = new Rulesground;
 	Menueground* MG = new Menueground;
+	Character* character;
+	Title* title;
+	//sf::Vector2i lastMousePos = sf::Mouse::getPosition(*window);
 
 	//private functions
 	void initWindow();
+	void initCharacter();
+	void initTitle();
+	
 
 public:
 	Game();
@@ -35,6 +43,7 @@ public:
 	void run();
 	void update();
 	void render();
+
 	
 
 };
