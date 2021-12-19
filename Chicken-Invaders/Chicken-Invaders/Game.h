@@ -11,12 +11,21 @@
 #include "Menueground.h"
 #include "Character.h"
 #include "Title.h"
+#include "Bullet.h"
+#include<map>;
 
 class Game
 {
 
 private:
+	//window
 	sf::RenderWindow* window; //pointer to make it dynamic
+
+	//resource
+	std::map<std::string, sf::Texture*> texture;
+	std::vector<Bullet*> bullet;
+
+	//buttons
 	Button* butStart= new Button(sf::Vector2f(350, 350), 150, 50);
 	Button* butRules = new Button(sf::Vector2f(350, 450), 150, 50);
 	Button* butExit = new Button(sf::Vector2f(350, 550), 150, 50);
@@ -25,12 +34,18 @@ private:
 	Playground* PG = new Playground;
 	Rulesground* RG = new Rulesground;
 	Menueground* MG = new Menueground;
+	
+	//character
 	Character* character;
+	
+	//title
 	Title* title;
+
 	//sf::Vector2i lastMousePos = sf::Mouse::getPosition(*window);
 
 	//private functions
 	void initWindow();
+	void initTexture();
 	void initCharacter();
 	void initTitle();
 	
@@ -41,6 +56,7 @@ public:
 
 	//functions
 	void run();
+	
 	void update();
 	void render();
 

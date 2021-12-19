@@ -12,6 +12,14 @@ void Game::initWindow()
 	window->setActive();
 }
 
+void Game::initTexture()
+{
+	this->texture["BULLET"] = new sf::Texture();
+	this->texture["BULLET"]->loadFromFile("Texture/Bullet1.png");
+}
+
+
+
 void Game::initCharacter()
 {
 	this->character = new Character();
@@ -27,6 +35,7 @@ void Game::initTitle()
 Game::Game()
 {
 	this->initWindow(); 
+	this->initTexture();
 	this->initCharacter();
 	this->initTitle();
 }
@@ -34,9 +43,24 @@ Game::Game()
 Game::~Game()
 {
 	delete this->window;
+
+	//delete texture
+	for (auto &i : this->texture)
+	{
+		delete i.second;
+	}
+
+	//delete bulets
+	for (auto* i : this->bullet)
+	{
+		delete i;
+	}
+
 	delete this->character;
 	delete this->title;
 }
+
+
 
 //functions
 void Game::run()
@@ -104,7 +128,7 @@ void Game::update()
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 		this->character->move(1.f, 0.f);
 
-		}
+		
 	/*else
 	{
 		this->character->moveByMouse(mousePos);
@@ -112,7 +136,33 @@ void Game::update()
 	lastMousePos = mousePos;
 	}*/
 
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && this->character->canAttack())
+	{
+		this->bullet.push_back(new Bullet(this->texture["BULLET"],this->character->getPos().x, this->character->getPos().y, 0.f, -1.f,50.f));
+	}
+	
+	unsigned counter = 0;
+	for (auto* bullets : this->bullet)
+	{
+		bullets->update();
+
+		//bulet is on top of the screen
+		if (bullets->getBounds().top + bullets->getBounds().height < 0.f)
+		{
+			//delete bullet
+			delete this->bullet.at(counter);
+			this->bullet.erase(this->bullet.begin() + counter);
+			--counter;
+
+
+		}
+		++counter;
+	}
+	}
+	this->character->update();
 }
+
+
 
 void Game::render()
 {
@@ -168,6 +218,11 @@ void Game::render()
 		{
 			PG->draw(window);
 			this->character->render(*this->window);
+
+			for (auto* bullets:this->bullet)
+			{
+				bullets->render(this->window);
+			}
 		}
 		else 
 		{

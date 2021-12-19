@@ -1,5 +1,12 @@
 #include "Character.h"
 
+void Character::initVariables()
+{
+	this->movementSpeed = 50.f;
+	this->attackCooldownMax = 5.f;
+	this->attackCooldown = this->attackCooldownMax;
+}
+
 void Character::initTexture()
 {
 	if (!this->texture.loadFromFile("Texture/Ship.png"))
@@ -19,8 +26,8 @@ void Character::initSprite()
 
 Character::Character()
 {
-	this->movementSpeed = 50.f;
-
+	
+	this->initVariables();
 	this->initTexture();
 	this->initSprite();
 }
@@ -29,10 +36,25 @@ Character::~Character()
 {
 }
 
+const sf::Vector2f& Character::getPos() const
+{
+	return this->sprite.getPosition();
+}
+
 void Character::move(const float dirX, const float dirY)
 {
 	
 	this->sprite.move(this->movementSpeed * dirX, this->movementSpeed * dirY);
+}
+
+const bool Character::canAttack()
+{
+	if (this->attackCooldown >= this->attackCooldownMax)
+	{
+		this->attackCooldown = 0.f; 
+		return true;
+	}
+	return false;
 }
 
 /*void Character::moveByMouse(sf::Vector2i pos)
@@ -43,7 +65,10 @@ void Character::move(const float dirX, const float dirY)
 
 void Character::update()
 {
-
+	if (this->attackCooldown < this->attackCooldownMax)
+	{
+		this->attackCooldown += 3.f;
+	}
 }
 
 void Character::render(sf::RenderTarget& target)

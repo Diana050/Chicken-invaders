@@ -15,8 +15,11 @@ private:
 	sf::Texture texture;
 
 	float movementSpeed;
+	float attackCooldown;
+	float attackCooldownMax;
 
 	//private functions
+	void initVariables();
 	void initTexture();
 	void initSprite();
 
@@ -24,8 +27,14 @@ public:
 	Character();
 	virtual ~Character();
 
+	//accessor
+	const sf::Vector2f& getPos() const;
+
 	//functions
 	void move(const float dirX, const float dirY);
+
+	const bool canAttack();
+
 	//void moveByMouse(sf::Vector2i pos);
 
 	void update();
