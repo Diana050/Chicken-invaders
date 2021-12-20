@@ -18,18 +18,34 @@ void Game::initTexture()
 	this->texture["BULLET"]->loadFromFile("Texture/Bullet1.png");
 }
 
+/*void Game::initChickenTexture()
+{
+	this->texture["ENEMY"] = new sf::Texture();
+	this->texture["ENEMY"]->loadFromFile("Texture/Chicken1.png");
+	
+}*/
+
 
 
 void Game::initCharacter()
 {
 	this->character = new Character();
+	
 }
+
+
+void Game::initEnemy()
+{
+	//this->enemy = new Enemy(20.f, 20.f);
+	this->spawnTimerMax = 10.f;
+	this->spawnTimer = this->spawnTimerMax;
+}
+
 
 void Game::initTitle()
 {
 	this->title = new Title();
 }
-
 
 //constructor & destructor
 Game::Game()
@@ -38,7 +54,9 @@ Game::Game()
 	this->initTexture();
 	this->initCharacter();
 	this->initTitle();
+	this->initEnemy();
 }
+
 
 Game::~Game()
 {
@@ -50,8 +68,14 @@ Game::~Game()
 		delete i.second;
 	}
 
-	//delete bulets
+	//delete bullets
 	for (auto* i : this->bullet)
+	{
+		delete i;
+	}
+
+	//delete enemies
+	for (auto* i : this->enemies)
 	{
 		delete i;
 	}
@@ -138,7 +162,7 @@ void Game::update()
 
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && this->character->canAttack())
 	{
-		this->bullet.push_back(new Bullet(this->texture["BULLET"],this->character->getPos().x, this->character->getPos().y, 0.f, -1.f,50.f));
+		this->bullet.push_back(new Bullet(this->texture["BULLET"],this->character->getPos().x + this->character->getBounds().width/2.f , this->character->getPos().y, 0.f, -1.f,50.f));
 	}
 	
 	unsigned counter = 0;
@@ -158,8 +182,44 @@ void Game::update()
 		}
 		++counter;
 	}
-	}
+	
 	this->character->update();
+
+	this->spawnTimer += 0.5f;
+	if (this->spawnTimer >= this->spawnTimerMax)
+	{
+		this->enemies.push_back(new Enemy(rand() % this->window->getSize().x-20.f, -100.f));
+		this->spawnTimer = 0.f; 
+	}
+	for (int i = 0; i < this->enemies.size();i++)
+	{
+		bool enemy_removed = false;
+		this->enemies[i]->update();
+		
+
+		for (size_t k = 0; k < this->bullet.size() && !enemy_removed; k++)
+		{
+			if (this->bullet[k]->getBounds().intersects(this->enemies[i]->getBounds()))
+			{
+				this->bullet.erase(this->bullet.begin() + k);
+				this->enemies.erase(this->enemies.begin() + i);
+				enemy_removed = true;
+			}
+		}
+
+		//remove enemye at the bottom of the screen
+		if (!enemy_removed)
+		{
+
+		if (this->enemies[i]->getBounds().top > this->window->getSize().y)
+		{
+			this->enemies.erase(this->enemies.begin() + i);
+			enemy_removed = true;
+		}
+		}
+	}
+	
+	}
 }
 
 
@@ -223,6 +283,11 @@ void Game::render()
 			{
 				bullets->render(this->window);
 			}
+			for (auto*enemy : this->enemies)
+			{
+				enemy->render(this->window);
+			}
+			
 		}
 		else 
 		{

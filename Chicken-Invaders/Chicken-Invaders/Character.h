@@ -22,6 +22,7 @@ private:
 	void initVariables();
 	void initTexture();
 	void initSprite();
+	void border();
 
 public:
 	Character();
@@ -29,6 +30,7 @@ public:
 
 	//accessor
 	const sf::Vector2f& getPos() const;
+	const sf::FloatRect getBounds() const;
 
 	//functions
 	void move(const float dirX, const float dirY);

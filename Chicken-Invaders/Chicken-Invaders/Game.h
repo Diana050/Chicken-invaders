@@ -12,6 +12,7 @@
 #include "Character.h"
 #include "Title.h"
 #include "Bullet.h"
+#include "Enemy.h"
 #include<map>;
 
 class Game
@@ -41,13 +42,21 @@ private:
 	//title
 	Title* title;
 
+	//enemy
+	float spawnTimer;
+	float spawnTimerMax;
+	std::vector<Enemy*> enemies;
+	Enemy* enemy;
+
 	//sf::Vector2i lastMousePos = sf::Mouse::getPosition(*window);
 
 	//private functions
 	void initWindow();
 	void initTexture();
+	//void initChickenTexture();
 	void initCharacter();
 	void initTitle();
+	void initEnemy();
 	
 
 public:
