@@ -30,7 +30,7 @@ public:
 	//accessor
 	const sf::FloatRect getBounds() const;
 
-	void update();
+	void update(float addSpeed);
 	void render(sf::RenderTarget* target);
 };
 

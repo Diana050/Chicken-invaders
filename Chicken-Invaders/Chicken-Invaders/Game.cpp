@@ -41,6 +41,11 @@ void Game::initEnemy()
 	this->spawnTimer = this->spawnTimerMax;
 }
 
+void Game::calcSpeed()
+{
+
+}
+
 
 void Game::initTitle()
 {
@@ -113,6 +118,7 @@ void Game::update()
 		butRules->isHoverd(mousePos);
 		butExit->isHoverd(mousePos);
 		butBack->isHoverd(mousePos);
+		butHighscores->isHoverd(mousePos);
 		if (ev.Event::type == sf::Event::MouseButtonPressed)
 		{
 			std::cout << "Buton de mouse apasat \n";
@@ -123,10 +129,11 @@ void Game::update()
 					
 					if (butStart->isPressed(mousePos)) windowstate = 1;
 					if (butRules->isPressed(mousePos)) windowstate = 2;
+					if (butHighscores->isPressed(mousePos)) windowstate = 3;
 					if (butExit->isPressed(mousePos)) this->window->close();
 
 				}	
-				if (windowstate == 2)
+				if (windowstate == 2 || windowstate == 3)
 				{
 					auto mousePos = sf::Mouse::getPosition(*window);
 					if (butBack->isPressed(mousePos)) windowstate = 0;
@@ -186,15 +193,15 @@ void Game::update()
 	this->character->update();
 
 	this->spawnTimer += 0.5f;
-	if (this->spawnTimer >= this->spawnTimerMax)
+	if (this->spawnTimer >= this->spawnTimerMax - (float)score/10)//TODO modifica acel 10 (cu cat e mai mic numarul cu atat creste viteze mai mult)
 	{
-		this->enemies.push_back(new Enemy(rand() % this->window->getSize().x-20.f, -100.f));
+		this->enemies.push_back(new Enemy(rand() % this->window->getSize().x-20.f, -100.f));//generare inamici
 		this->spawnTimer = 0.f; 
 	}
 	for (int i = 0; i < this->enemies.size();i++)
 	{
 		bool enemy_removed = false;
-		this->enemies[i]->update();
+		this->enemies[i]->update((float)score/1);//TODO change later to 5 BLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLA
 		
 
 		for (size_t k = 0; k < this->bullet.size() && !enemy_removed; k++)
@@ -204,6 +211,20 @@ void Game::update()
 				this->bullet.erase(this->bullet.begin() + k);
 				this->enemies.erase(this->enemies.begin() + i);
 				enemy_removed = true;
+				score++; //plusam scorul la fiecare kill
+			}
+		}
+
+		if (this->character->getBounds().intersects(this->enemies[i]->getBounds()) && character->getState()==0)//aici crapa de la vector :')
+		{
+			lives--;
+			this->enemies.erase(this->enemies.begin() + i);
+			enemy_removed = true;
+
+			character->startBOOM();
+			if (lives <= 0)
+			{//cod pentru terminarea jocului
+				windowstate = 4;
 			}
 		}
 
@@ -227,90 +248,201 @@ void Game::update()
 void Game::render()
 {
 	this->window->clear();
+	sf::Text text;
+	sf::Font font;
+	sf::RectangleShape background;
 
-	//draw all the things 
-	if (!windowstate)
+
+	switch (windowstate)
 	{
+	case 0:
 		MG->draw(window);
 		this->title->render(*this->window);
 		butStart->draw(window);
-		sf::Font font;
+		//sf::Font font;
 		if (!font.loadFromFile("Fonts/arial.ttf"))
 		{
 			std::cout << "Ia fontul de unde nu-i";
 		}
-		sf::Text text;
+		//sf::Text text;
 		text.setString("Play");
-		text.setFillColor(sf::Color(78,72,79));
+		text.setFillColor(sf::Color(78, 72, 79));
 		text.setFont(font);
 		text.setPosition(350, 350);
 		window->draw(text);
 
 		butRules->draw(window);
-		sf::Font font1;
-		if (!font1.loadFromFile("Fonts/arial.ttf"))
+		//sf::Font font;
+		if (!font.loadFromFile("Fonts/arial.ttf"))
 		{
 			std::cout << "Ia fontul de unde nu-i";
 		}
-		sf::Text text1;
-		text1.setString("Rules");
-		text1.setFillColor(sf::Color(78, 72, 79));
-		text1.setFont(font1);
-		text1.setPosition(350, 450);
-		window->draw(text1);
+		//sf::Text text;
+		text.setString("Rules");
+		text.setFillColor(sf::Color(78, 72, 79));
+		text.setFont(font);
+		text.setPosition(350, 450);
+		window->draw(text);
 
 		butExit->draw(window);
-		sf::Font font2;
-		if (!font2.loadFromFile("Fonts/arial.ttf"))
+		//sf::Font font2;
+		if (!font.loadFromFile("Fonts/arial.ttf"))
 		{
 			std::cout << "Ia fontul de unde nu-i";
 		}
-		sf::Text text2;
-		text2.setString("Exit");
-		text2.setFillColor(sf::Color(78, 72, 79));
-		text2.setFont(font2);
-		text2.setPosition(350, 550);
-		window->draw(text2);
-	}
-	else
-	{
-		if (windowstate == 1) 
-		{
-			PG->draw(window);
-			this->character->render(*this->window);
+		//sf::Text text2;
+		text.setString("Exit");
+		text.setFillColor(sf::Color(78, 72, 79));
+		text.setFont(font);
+		text.setPosition(350, 550);
+		window->draw(text);
 
-			for (auto* bullets:this->bullet)
-			{
-				bullets->render(this->window);
-			}
-			for (auto*enemy : this->enemies)
-			{
-				enemy->render(this->window);
-			}
-			
-		}
-		else 
+
+		butHighscores->draw(window);
+		//sf::Font font3;
+		if (!font.loadFromFile("Fonts/arial.ttf"))
 		{
-			if (windowstate == 2)
-			{
-				RG->draw(window);
-				butBack->draw(window);
-				sf::Font font3;
-				if (!font3.loadFromFile("Fonts/arial.ttf"))
-				{
-					std::cout << "Ia fontul de unde nu-i";
-				}
-				sf::Text text3;
-				text3.setString("Back");
-				text3.setFillColor(sf::Color(78, 72, 79));
-				text3.setFont(font3);
-				text3.setPosition(890, 625);
-				window->draw(text3);
-			}
+			std::cout << "Ia fontul de unde nu-i";
 		}
+		//sf::Text text3;
+		text.setString("Highscores");
+		text.setFillColor(sf::Color(78, 72, 79));
+		text.setFont(font);
+		text.setPosition(350, 650);
+		window->draw(text);
+
+		break;
+
+	case 1:
+
+		PG->draw(window);
+		this->character->render(*this->window);
+
+		//sf::Font font;
+		if (!font.loadFromFile("Fonts/arial.ttf"))
+		{
+			std::cout << "Ia fontul de unde nu-i";
+		}
+		//sf::Text text;
+		text.setString("Score " + std::to_string(score) + "\n" + "Lives " + std::to_string(lives)); // afisam scorul (trebuie to_string pentru ca nu merge concatenat un int la un text, aparent ¯\_(?)_/¯ )
+		text.setFillColor(sf::Color::Red);
+		text.setFont(font);
+		text.setPosition(0, 0);
+
+		window->draw(text);
+
+		for (auto* bullets : this->bullet)
+		{
+			bullets->render(this->window);
+		}
+		for (auto* enemy : this->enemies)
+		{
+			enemy->render(this->window);
+		}
+		break;
+
+	case 2:
+		RG->draw(window);
+		butBack->draw(window);
+		//sf::Font font;
+		if (!font.loadFromFile("Fonts/arial.ttf"))
+		{
+			std::cout << "Ia fontul de unde nu-i";
+		}
+		//sf::Text text;
+		text.setString("Back");
+		text.setFillColor(sf::Color(78, 72, 79));
+		text.setFont(font);
+		text.setPosition(890, 625);
+		window->draw(text);
+
+		break;
+
+	case 3:
+		HS->draw(window);
+		butBack->draw(window);
+
+
+		//sf::Font font; 
+		if (!font.loadFromFile("Fonts/arial.ttf"))
+		{
+			std::cout << "Ia fontul de unde nu-i";
+		}
+		//sf::Text text;
+		text.setString("Back");
+		text.setFillColor(sf::Color(78, 72, 79));
+		text.setFont(font);
+		text.setPosition(890, 625);
+		window->draw(text);
+
+		break;
+
+	case 4:
+		//HS->drawGameOver(window, score);
+
+
+		background.setSize(sf::Vector2f(1920, 1080));
+		background.setFillColor(sf::Color(0, 0, 0, 128));
+		window->draw(background);
+
+		//sf::Font font;
+		if (!font.loadFromFile("Fonts/arial.ttf"))
+		{
+			std::cout << "Ia fontul de unde nu-i";
+		}
+		//sf::Text text;
+		text.setString("Game Over \n \n Your final score is: \n          " + std::to_string(score));
+		text.setFillColor(sf::Color::White);
+		text.setFont(font);
+		text.setCharacterSize(50);
+		text.setPosition(540, 420);
+
+		window->draw(text);
+
+		if (HS->isItHigh(score)) {
+			text.setString("You have obtaind a place in the hall of fame, enter your name");
+			text.setPosition(450, 650);
+
+			window->draw(text);
+
 			
+			std::string playerInput;
+			sf::Text  playerText;
+			sf::Event event;
+
+			playerText.setFillColor(sf::Color::White);
+			playerText.setFont(font);
+			playerText.setPosition(540, 450);
+
+			
+
+			if (window->pollEvent(event))
+			{
+				while (event.type == sf::Event::KeyPressed)
+				{
+					std::cout<< static_cast<char>(event.text.unicode) << std::endl;
+					std::cout << "macaraici";
+					if (event.type == sf::Keyboard::A) std::cout << "A";
+				}
+			//	std::cout << static_cast<char>(event.text.unicode) << std::endl;
+				//playerInput += event.text.unicode;
+				//playerText.setString(playerInput);
+				
+			}
+
+
+			
+			window->draw(playerText);
+			
+			//window->display();
+		}
+
+	default:
+		//windowstate = 0;
+		break;
+
 	}
-		
+
 
 	this->window->display();
 }

@@ -17,6 +17,7 @@ private:
 	float movementSpeed;
 	float attackCooldown;
 	float attackCooldownMax;
+	int state;
 
 	//private functions
 	void initVariables();
@@ -34,8 +35,10 @@ public:
 
 	//functions
 	void move(const float dirX, const float dirY);
-
+	void changeSprite();
 	const bool canAttack();
+	int getState();
+	void startBOOM();
 
 	//void moveByMouse(sf::Vector2i pos);
 

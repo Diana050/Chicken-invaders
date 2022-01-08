@@ -37,9 +37,9 @@ const  sf::FloatRect Enemy::getBounds() const
 	return this->shape.getGlobalBounds();
 }
 
-void Enemy::update()
+void Enemy::update(float addSpeed)
 {
-	this->shape.move(0.f, this->speed);
+	this->shape.move(0.f, this->speed+addSpeed);
 }
 
 void Enemy::render(sf::RenderTarget * target)

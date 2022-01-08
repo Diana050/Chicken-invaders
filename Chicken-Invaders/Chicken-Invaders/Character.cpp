@@ -37,7 +37,7 @@ void Character::border()
 
 Character::Character()
 {
-	
+	state = 0;
 	this->initVariables();
 	this->initTexture();
 	this->initSprite();
@@ -46,6 +46,8 @@ Character::Character()
 Character::~Character()
 {
 }
+
+
 
 const sf::Vector2f& Character::getPos() const
 {
@@ -64,6 +66,72 @@ void Character::move(const float dirX, const float dirY)
 	border();
 }
 
+void Character::changeSprite()
+{
+	switch (state/2)
+	{
+	case 0:
+		if (!this->texture.loadFromFile("Texture/Ship.png"))
+		{
+			std::cout << "Sunt poza si nu ma vad";
+		}
+		break;
+
+	case 1:
+		if (!this->texture.loadFromFile("Texture/explosion1.png"))
+		{
+			std::cout << "Sunt poza si nu ma vad";
+		}
+		break;
+
+	case 2:
+		if (!this->texture.loadFromFile("Texture/explosion2.png"))
+		{
+			std::cout << "Sunt poza si nu ma vad";
+		}
+		break;
+
+	case 3:
+		if (!this->texture.loadFromFile("Texture/explosion3.png"))
+		{
+			std::cout << "Sunt poza si nu ma vad";
+		}
+		break;
+
+	case 4:
+		if (!this->texture.loadFromFile("Texture/explosion4.png"))
+		{
+			std::cout << "Sunt poza si nu ma vad";
+		}
+		break;
+
+	case 5:
+		if (!this->texture.loadFromFile("Texture/explosion5.png"))
+		{
+			std::cout << "Sunt poza si nu ma vad";
+		}
+		break;
+
+	default:
+		if (!this->texture.loadFromFile("Texture/MT.png"))//TODO de schimbat resursa intr-un sprite gol
+		{
+			std::cout << "Sunt poza si nu ma vad";
+		}
+		break;
+	}
+
+	state++; //progresia prin explozie si trecerea reconstruirea navei dupa explozie
+	if (state > 10)
+	{
+		state = 0;
+		if (!this->texture.loadFromFile("Texture/Ship.png"))
+		{
+			std::cout << "Sunt poza si nu ma vad";
+		}
+		this->sprite.setPosition(900.f, 950.f);
+	}
+}
+
 const bool Character::canAttack()
 {
 	if (this->attackCooldown >= this->attackCooldownMax)
@@ -72,6 +140,16 @@ const bool Character::canAttack()
 		return true;
 	}
 	return false;
+}
+
+int Character::getState()
+{
+	return state;
+}
+
+void Character::startBOOM()
+{
+	this->state = 1;
 }
 
 /*void Character::moveByMouse(sf::Vector2i pos)
@@ -86,9 +164,13 @@ void Character::update()
 	{
 		this->attackCooldown += 3.f;
 	}
+
+	if (state != 0) changeSprite();
 }
 
 void Character::render(sf::RenderTarget& target)
 {
 	target.draw(this->sprite);
 }
+
+

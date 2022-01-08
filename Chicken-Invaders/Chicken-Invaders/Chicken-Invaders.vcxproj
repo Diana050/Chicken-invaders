@@ -150,6 +150,8 @@
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameOver.cpp" />
+    <ClCompile Include="HighScores.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Menueground.cpp" />
     <ClCompile Include="Playground.cpp" />
@@ -162,6 +164,8 @@
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Button.h" />
+    <ClInclude Include="GameOver.h" />
+    <ClInclude Include="HighScores.h" />
     <ClInclude Include="Menueground.h" />
     <ClInclude Include="Playground.h" />
     <ClInclude Include="Rulesground.h" />

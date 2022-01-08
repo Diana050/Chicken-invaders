@@ -13,6 +13,7 @@
 #include "Title.h"
 #include "Bullet.h"
 #include "Enemy.h"
+#include "HighScores.h"
 #include<map>;
 
 class Game
@@ -31,10 +32,12 @@ private:
 	Button* butRules = new Button(sf::Vector2f(350, 450), 150, 50);
 	Button* butExit = new Button(sf::Vector2f(350, 550), 150, 50);
 	Button* butBack = new Button(sf::Vector2f(850,620), 150, 50);
+	Button* butHighscores = new Button(sf::Vector2f(350, 650), 150, 50);
 	int windowstate = 0;
 	Playground* PG = new Playground;
 	Rulesground* RG = new Rulesground;
 	Menueground* MG = new Menueground;
+	HighScores* HS = new HighScores;
 	
 	//character
 	Character* character;
@@ -49,6 +52,8 @@ private:
 	Enemy* enemy;
 
 	//sf::Vector2i lastMousePos = sf::Mouse::getPosition(*window);
+	int score = 3;
+	int lives = 0;
 
 	//private functions
 	void initWindow();
@@ -57,6 +62,7 @@ private:
 	void initCharacter();
 	void initTitle();
 	void initEnemy();
+	void calcSpeed();
 	
 
 public:
