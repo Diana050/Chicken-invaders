@@ -152,11 +152,6 @@ void Character::startBOOM()
 	this->state = 1;
 }
 
-/*void Character::moveByMouse(sf::Vector2i pos)
-{
-	auto p = sf::Vector2f(pos);
-	this->sprite.setPosition(p);
-}*/
 
 void Character::update()
 {

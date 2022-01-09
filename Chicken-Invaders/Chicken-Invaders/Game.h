@@ -30,11 +30,11 @@ private:
 	std::vector<PowerUp*> powerUps;
 
 	//buttons
-	Button* butStart= new Button(sf::Vector2f(350, 350), 150, 50);
-	Button* butRules = new Button(sf::Vector2f(350, 450), 150, 50);
-	Button* butExit = new Button(sf::Vector2f(350, 550), 150, 50);
-	Button* butBack = new Button(sf::Vector2f(850,620), 150, 50);
-	Button* butHighscores = new Button(sf::Vector2f(350, 650), 150, 50);
+	Button* butStart= new Button(sf::Vector2f(865, 385), 190, 65);
+	Button* butRules = new Button(sf::Vector2f(865, 485), 190, 65);
+	Button* butExit = new Button(sf::Vector2f(865, 585), 190, 65);
+	Button* butBack = new Button(sf::Vector2f(865,685), 190, 65);
+	Button* butHighscores = new Button(sf::Vector2f(865, 685), 190, 65);
 	int windowstate = 0;
 	Playground* PG = new Playground;
 	Rulesground* RG = new Rulesground;

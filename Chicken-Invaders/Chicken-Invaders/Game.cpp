@@ -304,7 +304,7 @@ void Game::render()
 		text.setString("Play");
 		text.setFillColor(sf::Color(78, 72, 79));
 		text.setFont(font);
-		text.setPosition(350, 350);
+		text.setPosition(925, 395);
 		window->draw(text);
 
 		butRules->draw(window);
@@ -317,7 +317,7 @@ void Game::render()
 		text.setString("Rules");
 		text.setFillColor(sf::Color(78, 72, 79));
 		text.setFont(font);
-		text.setPosition(350, 450);
+		text.setPosition(915, 495);
 		window->draw(text);
 
 		butExit->draw(window);
@@ -330,7 +330,7 @@ void Game::render()
 		text.setString("Exit");
 		text.setFillColor(sf::Color(78, 72, 79));
 		text.setFont(font);
-		text.setPosition(350, 550);
+		text.setPosition(925, 595);
 		window->draw(text);
 
 
@@ -344,7 +344,7 @@ void Game::render()
 		text.setString("Highscores");
 		text.setFillColor(sf::Color(78, 72, 79));
 		text.setFont(font);
-		text.setPosition(350, 650);
+		text.setPosition(890, 695);
 		window->draw(text);
 
 		break;
@@ -361,7 +361,7 @@ void Game::render()
 		}
 		//sf::Text text;
 		text.setString("Score " + std::to_string(score) + "\n" + "Lives " + std::to_string(lives) + "\n " + "Damage "+ std::to_string(damage)); // afisam scorul (trebuie to_string pentru ca nu merge concatenat un int la un text, aparent ¯\_(?)_/¯ )
-		text.setFillColor(sf::Color::Red);
+		text.setFillColor(sf::Color(189,38,38));
 		text.setFont(font);
 		text.setPosition(0, 0);
 
@@ -393,7 +393,7 @@ void Game::render()
 		text.setString("Back");
 		text.setFillColor(sf::Color(78, 72, 79));
 		text.setFont(font);
-		text.setPosition(890, 625);
+		text.setPosition(925, 695);
 		window->draw(text);
 
 		break;
@@ -412,7 +412,7 @@ void Game::render()
 		text.setString("Back");
 		text.setFillColor(sf::Color(78, 72, 79));
 		text.setFont(font);
-		text.setPosition(890, 625);
+		text.setPosition(925, 695);
 		window->draw(text);
 
 		break;
