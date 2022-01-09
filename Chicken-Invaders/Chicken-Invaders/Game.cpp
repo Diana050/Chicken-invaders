@@ -7,7 +7,7 @@
 void Game::initWindow()
 {
 	this->window = new  sf::RenderWindow(sf::VideoMode(1920,1080), "Chicken Invaders", sf::Style::Fullscreen);
-	this->window->setFramerateLimit(144);
+	this->window->setFramerateLimit(60);//////a fost 144
 	this->window->setVerticalSyncEnabled(false);
 	window->setActive();
 }
@@ -106,43 +106,54 @@ void Game::run()
 void Game::update()
 {
 	sf::Event ev;
-	while (this->window->pollEvent(ev))
+	if (windowstate == 0)
 	{
-		
-		if (ev.Event::KeyPressed && ev.Event::key.code  == sf::Keyboard::F4)
-			this->window->close(); 
-
-		auto mousePos = sf::Mouse::getPosition(*window); //auto inseamna ca tipul de variabila e atribuit automat in functie de ce primeste
-
-		butStart->isHoverd(mousePos);
-		butRules->isHoverd(mousePos);
-		butExit->isHoverd(mousePos);
-		butBack->isHoverd(mousePos);
-		butHighscores->isHoverd(mousePos);
-		if (ev.Event::type == sf::Event::MouseButtonPressed)
+		while (this->window->pollEvent(ev))
 		{
-			std::cout << "Buton de mouse apasat \n";
-			if (ev.Event::mouseButton.button == sf::Mouse::Left)
-			{
-				if (!windowstate)
-				{
-					
-					if (butStart->isPressed(mousePos)) windowstate = 1;
-					if (butRules->isPressed(mousePos)) windowstate = 2;
-					if (butHighscores->isPressed(mousePos)) windowstate = 3;
-					if (butExit->isPressed(mousePos)) this->window->close();
+			auto mousePos = sf::Mouse::getPosition(*window); //auto inseamna ca tipul de variabila e atribuit automat in functie de ce primeste
 
-				}	
-				if (windowstate == 2 || windowstate == 3)
+			butStart->isHoverd(mousePos);
+			butRules->isHoverd(mousePos);
+			butExit->isHoverd(mousePos);
+			butHighscores->isHoverd(mousePos);
+			if (ev.Event::type == sf::Event::MouseButtonPressed)
+			{
+				std::cout << "Buton de mouse apasat \n";
+				if (ev.Event::mouseButton.button == sf::Mouse::Left)
+				{
+					if (!windowstate)
+					{
+
+						if (butStart->isPressed(mousePos)) windowstate = 1;
+						if (butRules->isPressed(mousePos)) windowstate = 2;
+						if (butHighscores->isPressed(mousePos)) windowstate = 3;
+						if (butExit->isPressed(mousePos)) this->window->close();
+
+					}
+				}
+			}
+		}
+	}
+
+	if ((windowstate == 2 || windowstate == 3))
+	{
+		while (this->window->pollEvent(ev))
+		{
+			if (ev.Event::KeyPressed && ev.Event::key.code == sf::Keyboard::F4) this->window->close();
+
+
+			{
+				auto mousePos = sf::Mouse::getPosition(*window);
+				butBack->isHoverd(mousePos);
+				if (ev.Event::type == sf::Event::MouseButtonPressed && ev.Event::mouseButton.button == sf::Mouse::Left)
 				{
 					auto mousePos = sf::Mouse::getPosition(*window);
 					if (butBack->isPressed(mousePos)) windowstate = 0;
 				}
-
-
 			}
 		}
 	}
+	
 	if (windowstate == 1)
 	{
 	/*auto mousePos = sf::Mouse::getPosition(*window);
@@ -202,29 +213,42 @@ void Game::update()
 	{
 		bool enemy_removed = false;
 		this->enemies[i]->update((float)score/1);//TODO change later to 5 BLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLA
-		
 
 		for (size_t k = 0; k < this->bullet.size() && !enemy_removed; k++)
 		{
 			if (this->bullet[k]->getBounds().intersects(this->enemies[i]->getBounds()))
 			{
 				this->bullet.erase(this->bullet.begin() + k);
-				this->enemies.erase(this->enemies.begin() + i);
-				enemy_removed = true;
-				score++; //plusam scorul la fiecare kill
+
+				if (enemies[i]->isDedAfterHit(damage))
+				{		
+					if (this->enemies[i]->droppin())
+					{
+						this->powerUps.push_back(new PowerUp(enemies[i]->getPos()));
+					}
+					this->enemies.erase(this->enemies.begin() + i);
+					i--;
+					enemy_removed = true;
+					score++; //plusam scorul la fiecare kill
+				}
 			}
 		}
 
-		if (this->character->getBounds().intersects(this->enemies[i]->getBounds()) && character->getState()==0)//aici crapa de la vector :')
+		if (i >= 0 && i < enemies.size())
 		{
-			lives--;
-			this->enemies.erase(this->enemies.begin() + i);
-			enemy_removed = true;
+			if (this->character->getBounds().intersects(this->enemies[i]->getBounds()) && character->getState() == 0)//aici crapa de la vector :')
+			{
+				this->enemies.erase(this->enemies.begin() + i);
+				lives--;
+				damage = 1;
+				this->enemies.erase(this->enemies.begin() + i);
+				enemy_removed = true;
 
-			character->startBOOM();
-			if (lives <= 0)
-			{//cod pentru terminarea jocului
-				windowstate = 4;
+				character->startBOOM();
+				if (lives <= 0)
+				{//cod pentru terminarea jocului
+					windowstate = 4;
+				}
 			}
 		}
 
@@ -239,6 +263,16 @@ void Game::update()
 		}
 		}
 	}
+	for (int i = 0; i < this->powerUps.size(); i++)
+	{
+		this->powerUps[i]->update((float)score / 1);
+		if (this->character->getBounds().intersects(this->powerUps[i]->getBounds()) && character->getState() == 0)//aici crapa de la vector :')
+		{
+			if (this->powerUps[i]->getType() == 1) damage++;
+			else lives++;
+			this->powerUps.erase(this->powerUps.begin() + i);
+		}
+	}
 	
 	}
 }
@@ -248,6 +282,8 @@ void Game::update()
 void Game::render()
 {
 	this->window->clear();
+	static sf::Text  playerText;
+	static std::string playerInput;
 	sf::Text text;
 	sf::Font font;
 	sf::RectangleShape background;
@@ -324,7 +360,7 @@ void Game::render()
 			std::cout << "Ia fontul de unde nu-i";
 		}
 		//sf::Text text;
-		text.setString("Score " + std::to_string(score) + "\n" + "Lives " + std::to_string(lives)); // afisam scorul (trebuie to_string pentru ca nu merge concatenat un int la un text, aparent ¯\_(?)_/¯ )
+		text.setString("Score " + std::to_string(score) + "\n" + "Lives " + std::to_string(lives) + "\n " + "Damage "+ std::to_string(damage)); // afisam scorul (trebuie to_string pentru ca nu merge concatenat un int la un text, aparent ¯\_(?)_/¯ )
 		text.setFillColor(sf::Color::Red);
 		text.setFont(font);
 		text.setPosition(0, 0);
@@ -338,6 +374,10 @@ void Game::render()
 		for (auto* enemy : this->enemies)
 		{
 			enemy->render(this->window);
+		}
+		for (auto* powerup : this->powerUps)
+		{
+			powerup->render(this->window);
 		}
 		break;
 
@@ -405,35 +445,56 @@ void Game::render()
 
 			window->draw(text);
 
-			
-			std::string playerInput;
-			sf::Text  playerText;
+
+
 			sf::Event event;
 
 			playerText.setFillColor(sf::Color::White);
 			playerText.setFont(font);
-			playerText.setPosition(540, 450);
+			playerText.setPosition(540, 1000);
 
-			
+
 
 			if (window->pollEvent(event))
 			{
-				while (event.type == sf::Event::KeyPressed)
+
+				if (event.Event::KeyPressed && event.Event::key.code == sf::Keyboard::F4)
+					this->window->close();
+				else if (event.type == sf::Event::Closed)
+					window->close();
+
+				//std::cout << "a" << std::endl;
+				if (event.type == sf::Event::TextEntered)
 				{
-					std::cout<< static_cast<char>(event.text.unicode) << std::endl;
-					std::cout << "macaraici";
-					if (event.type == sf::Keyboard::A) std::cout << "A";
+					if (event.text.unicode < 128)
+					{
+						std::cout << static_cast<char>(event.text.unicode) << std::endl;
+
+						if (event.text.unicode == '\b')
+						{
+							if(playerInput.size()>0) playerInput.erase(playerInput.size() - 1, 1);		
+						}
+						else playerInput += event.text.unicode;
+					}
 				}
-			//	std::cout << static_cast<char>(event.text.unicode) << std::endl;
-				//playerInput += event.text.unicode;
-				//playerText.setString(playerInput);
-				
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
+				{
+					//wplayerInput.erase(playerInput.size() - 1, 1);//stergem enterul care se pune pe string
+					//std::cout << playerInput;
+
+					windowstate = 3;
+
+					HS->addNew(playerInput, score);
+				}
+
+				playerText.setString(playerInput);
+
 			}
 
 
-			
+
 			window->draw(playerText);
-			
+
 			//window->display();
 		}
 

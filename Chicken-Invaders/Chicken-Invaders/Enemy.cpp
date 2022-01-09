@@ -12,8 +12,8 @@ void Enemy::intiVariables()
 {
 	 this->type  = 0;
 	 this->speed = 15.f;
-	 this->hpMAx = 10;;
-	 this->hp  =0;
+	 this->hpMax = rand() % 3 + 1; //inamici generati cu viata random de la 1 pana la 3
+	 this->hp = hpMax; 
 	 this->damage  =1;
 	 this->points  =5;
 }
@@ -37,6 +37,29 @@ const  sf::FloatRect Enemy::getBounds() const
 	return this->shape.getGlobalBounds();
 }
 
+bool Enemy::isDedAfterHit(int dmg)
+{
+	hp= hp - dmg;
+	if (hp <= 0)return true;
+	else return false;
+}
+
+bool Enemy::droppin()
+{
+	
+	int advantage = 10 - 2 * hpMax; //sansa mai mare de drop cu cat e inamicul mai puternic
+	int rando = rand() % advantage;
+	if (rando == 1) return true;
+	else return false;
+	
+	//return true;
+}
+
+sf::Vector2f Enemy::getPos()
+{
+	return this->shape.getPosition();
+}
+
 void Enemy::update(float addSpeed)
 {
 	this->shape.move(0.f, this->speed+addSpeed);
@@ -46,3 +69,5 @@ void Enemy::render(sf::RenderTarget * target)
 {
 	target->draw(this->shape);
 }
+
+

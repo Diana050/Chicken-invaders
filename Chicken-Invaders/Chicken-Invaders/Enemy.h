@@ -16,7 +16,7 @@ private:
 	int type;
 	float speed;
 	int hp;
-	int hpMAx;
+	int hpMax;
 	int damage;
 	int points;
 
@@ -30,6 +30,9 @@ public:
 	//accessor
 	const sf::FloatRect getBounds() const;
 
+	bool isDedAfterHit(int dmg);
+	bool droppin();
+	sf::Vector2f getPos();
 	void update(float addSpeed);
 	void render(sf::RenderTarget* target);
 };

@@ -155,6 +155,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Menueground.cpp" />
     <ClCompile Include="Playground.cpp" />
+    <ClCompile Include="PowerUp.cpp" />
     <ClCompile Include="Rulesground.cpp" />
     <ClCompile Include="Title.cpp" />
   </ItemGroup>
@@ -168,6 +169,7 @@
     <ClInclude Include="HighScores.h" />
     <ClInclude Include="Menueground.h" />
     <ClInclude Include="Playground.h" />
+    <ClInclude Include="PowerUp.h" />
     <ClInclude Include="Rulesground.h" />
     <ClInclude Include="Title.h" />
   </ItemGroup>

@@ -23,6 +23,7 @@ void HighScores::addNew(std::string name, int score)
 
 	hsScores[whereToPutIt] = score;
 	hsNames[whereToPutIt] = name;
+	numberOfScores++;
 
 	writeFIle();
 }
@@ -50,11 +51,15 @@ void HighScores::readFile()
 void HighScores::writeFIle()
 {
 	std::ofstream out("Highscores.txt");
-	for (int i = 0; i < numberOfScores; i++)
+	if (out.is_open())
 	{
-		out << hsScores[i]<<" "<<hsNames[i]<<"\n";
+		for (int i = 0; i < numberOfScores; i++)
+		{
+			out << hsScores[i] << " " << hsNames[i] << "\n";
+		}
+		out.close();
 	}
-	out.close();
+	else std::cout << "unable to open out";
 }
 
 HighScores::HighScores()

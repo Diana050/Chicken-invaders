@@ -14,6 +14,7 @@
 #include "Bullet.h"
 #include "Enemy.h"
 #include "HighScores.h"
+#include "PowerUp.h"
 #include<map>;
 
 class Game
@@ -26,6 +27,7 @@ private:
 	//resource
 	std::map<std::string, sf::Texture*> texture;
 	std::vector<Bullet*> bullet;
+	std::vector<PowerUp*> powerUps;
 
 	//buttons
 	Button* butStart= new Button(sf::Vector2f(350, 350), 150, 50);
@@ -52,8 +54,9 @@ private:
 	Enemy* enemy;
 
 	//sf::Vector2i lastMousePos = sf::Mouse::getPosition(*window);
-	int score = 3;
-	int lives = 0;
+	int score = 0;
+	int lives = 3;
+	int damage = 1;
 
 	//private functions
 	void initWindow();
