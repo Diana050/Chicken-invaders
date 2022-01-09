@@ -12,6 +12,8 @@ class Enemy
 {
 private:
 	sf::CircleShape shape;
+	sf::Sprite sprite;
+	sf::Texture texture;
 
 	int type;
 	float speed;
@@ -21,6 +23,8 @@ private:
 	int points;
 
 	void initShape();
+	void initTexture();
+	void initSprite();
 	void intiVariables();
 
 public:

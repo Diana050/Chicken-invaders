@@ -35,6 +35,7 @@ public:
 
 	//functions
 	void move(const float dirX, const float dirY);
+	void setPosition(sf::Vector2i mousePos);
 	void changeSprite();
 	const bool canAttack();
 	int getState();

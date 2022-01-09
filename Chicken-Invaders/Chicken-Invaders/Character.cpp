@@ -66,6 +66,12 @@ void Character::move(const float dirX, const float dirY)
 	border();
 }
 
+void Character::setPosition(sf::Vector2i mousePos)
+{
+	this->sprite.setPosition((sf::Vector2f) mousePos);
+	border();
+}
+
 void Character::changeSprite()
 {
 	switch (state/2)

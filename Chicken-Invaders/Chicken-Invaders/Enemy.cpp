@@ -1,12 +1,29 @@
 #include "Enemy.h"
 
-void Enemy::initShape()
+void Enemy::initTexture()
+{
+	if (!this->texture.loadFromFile("Texture/Chicken1.png"))
+	{
+		std::cout << "Sunt poza si nu ma vad";
+	}
+}
+
+void Enemy::initSprite()
+{
+	this->sprite.setTexture(this->texture);
+
+	this->sprite.setPosition(100.f, 950.f);
+
+	this->sprite.scale(0.15f, 0.15f);
+}
+
+/*void Enemy::initShape()
 {
 	this->shape.setRadius(rand()%20 +20);
 	this->shape.setPointCount(rand() %20  + 3);
 	this->shape.setFillColor(sf::Color(rand() % 255 + 1, rand() % 255 + 1, rand() % 255 + 1, 255));
 
-}
+}*/
 
 void Enemy::intiVariables()
 {
@@ -20,9 +37,11 @@ void Enemy::intiVariables()
 
 Enemy::Enemy( float pos_x, float pos_y)
 {
-	this->initShape();
+	//this->initShape();
+	this->initTexture();
+	this->initSprite();
 	this->intiVariables();
-	this->shape.setPosition(pos_x, pos_y);
+	this->sprite.setPosition(pos_x, pos_y);
 	
 }
 
@@ -34,7 +53,7 @@ Enemy::~Enemy()
 
 const  sf::FloatRect Enemy::getBounds() const
 {
-	return this->shape.getGlobalBounds();
+	return this->sprite.getGlobalBounds();
 }
 
 bool Enemy::isDedAfterHit(int dmg)
@@ -57,17 +76,17 @@ bool Enemy::droppin()
 
 sf::Vector2f Enemy::getPos()
 {
-	return this->shape.getPosition();
+	return this->sprite.getPosition();
 }
 
 void Enemy::update(float addSpeed)
 {
-	this->shape.move(0.f, this->speed+addSpeed);
+	this->sprite.move(0.f, this->speed+addSpeed);
 }
 
 void Enemy::render(sf::RenderTarget * target)
 {
-	target->draw(this->shape);
+	target->draw(this->sprite);
 }
 
 

@@ -124,7 +124,12 @@ void Game::update()
 					if (!windowstate)
 					{
 
-						if (butStart->isPressed(mousePos)) windowstate = 1;
+						if (butStart->isPressed(mousePos))
+						{
+							windowstate = 1;
+							score = 0;
+							lives = 3;
+						}
 						if (butRules->isPressed(mousePos)) windowstate = 2;
 						if (butHighscores->isPressed(mousePos)) windowstate = 3;
 						if (butExit->isPressed(mousePos)) this->window->close();
@@ -156,27 +161,21 @@ void Game::update()
 	
 	if (windowstate == 1)
 	{
-	/*auto mousePos = sf::Mouse::getPosition(*window);
-	move character
-	if (lastMousePos == mousePos)
-	{*/
+	
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+	/*if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 		this->character->move(-1.f, 0.f);
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 		this->character->move(0.f, -1.f);
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 		this->character->move(0.f, 1.f);
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-		this->character->move(1.f, 0.f);
-
-		
-	/*else
-	{
-		this->character->moveByMouse(mousePos);
-	}
-	lastMousePos = mousePos;
-	}*/
+		this->character->move(1.f, 0.f);*/
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+		windowstate = 0;
+	auto mousePos = sf::Mouse::getPosition(*window);
+	this->character->setPosition(mousePos);
+	
 
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && this->character->canAttack())
 	{
@@ -241,7 +240,7 @@ void Game::update()
 				this->enemies.erase(this->enemies.begin() + i);
 				lives--;
 				damage = 1;
-				this->enemies.erase(this->enemies.begin() + i);
+				//this->enemies.erase(this->enemies.begin() + i);
 				enemy_removed = true;
 
 				character->startBOOM();
